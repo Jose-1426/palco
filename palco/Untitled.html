@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .seat {
+      width: 30px;
+      height: 30px;
+      margin: 5px;
+      display: inline-block;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .seat img {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Reserva de Cadeiras no Teatro</h1>
+  <div id="seating">
+    <div class="seat" style="background-color: #ff0000;"></div> Fila 1-5 (R$50)
+        <div class="seat" style="background-color: #00ff00;"></div> Fila 6-10 (R$40)
+        <div class="seat" style="background-color: #0000ff;"></div> Fila 11-15 (R$30)
+        <div class="seat" style="background-color: #ffff00;"></div> Poltrona Central (+10%)
+    <h2>Selecione uma cadeira:</h2>
+  </div>
+  <input type="button" value="Total" onclick="calculateTotal()" />
+
+  <script language="javascript">
+    var seats = new Array(600); 
+
+    
+    for (var i = 0; i < 600; i++) {
+      var rowColor;
+      if (i < 200) {
+        rowColor = "#ff0000"; 
+      } else if (i < 400) {
+        rowColor = "#00ff00"; 
+      } else if (i < 600) {
+        rowColor = "#0000ff"; 
+      }
+
+      if (i % 40 === 0) {
+        rowColor = "#ffff00"; 
+      }
+
+      seats[i] = { price: getPrice(i), reserved: false, image: "vermelho.png", color: rowColor };
+    }
+
+    
+    function getPrice(seatIndex) {
+      var basePrice = 0;
+      if (seatIndex < 200) {
+        basePrice = 50;
+      } else if (seatIndex < 400) {
+        basePrice = 40;
+      } else {
+        basePrice = 30;
+      }
+
+      
+      if (seatIndex % 40 === 0) {
+        return basePrice * 1.1;
+      }
+      return basePrice;
+    }
+
+    
+    function toggleReservation(seatIndex) {
+      var seatElement = document.getElementById("seat" + seatIndex);
+
+      if (seats[seatIndex].reserved) {
+        seats[seatIndex].reserved = false;
+        seatElement.style.backgroundColor = seats[seatIndex].color;
+      } else {
+        seats[seatIndex].reserved = true;
+        seatElement.style.backgroundColor = "gray"; 
+      }
+    }
+
+    
+    function calculateTotal() {
+      var totalCost = 0;
+      for (var i = 0; i < seats.length; i++) {
+        if (seats[i].reserved) {
+          totalCost += seats[i].price;
+        }
+      }
+      alert("Total cost: R$" + totalCost.toFixed(2));
+    }
+
+  
+    var seatingDiv = document.getElementById("seating");
+    for (var i = 0; i < seats.length; i++) {
+      var seatDiv = document.createElement("div");
+      seatDiv.className = "seat";
+      seatDiv.style.backgroundColor = seats[i].color;
+
+      var seatImage = document.createElement("img");
+      seatImage.src = seats[i].image;
+      seatImage.style.width = "100%";
+      seatImage.style.height = "100%";
+      seatDiv.appendChild(seatImage);
+
+      seatDiv.onclick = function (index) {
+        return function () {
+          toggleReservation(index);
+        };
+      }(i);
+      seatDiv.id = "seat" + i;
+      seatingDiv.appendChild(seatDiv);
+    }
+  </script>
+</body>
+</html>
