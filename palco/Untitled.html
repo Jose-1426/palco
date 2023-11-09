@@ -1,118 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <style>
-    .seat {
-      width: 30px;
-      height: 30px;
-      margin: 5px;
-      display: inline-block;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .seat img {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-</head>
-<body>
-  <h1>Reserva de Cadeiras no Teatro</h1>
-  <div id="seating">
-    <div class="seat" style="background-color: #ff0000;"></div> Fila 1-5 (R$50)
-        <div class="seat" style="background-color: #00ff00;"></div> Fila 6-10 (R$40)
-        <div class="seat" style="background-color: #0000ff;"></div> Fila 11-15 (R$30)
-        <div class="seat" style="background-color: #ffff00;"></div> Poltrona Central (+10%)
-    <h2>Selecione uma cadeira:</h2>
-  </div>
-  <input type="button" value="Total" onclick="calculateTotal()" />
-
-  <script language="javascript">
-    var seats = new Array(600); 
-
-    
-    for (var i = 0; i < 600; i++) {
-      var rowColor;
-      if (i < 200) {
-        rowColor = "#ff0000"; 
-      } else if (i < 400) {
-        rowColor = "#00ff00"; 
-      } else if (i < 600) {
-        rowColor = "#0000ff"; 
-      }
-
-      if (i % 40 === 0) {
-        rowColor = "#ffff00"; 
-      }
-
-      seats[i] = { price: getPrice(i), reserved: false, image: "vermelho.png", color: rowColor };
-    }
-
-    
-    function getPrice(seatIndex) {
-      var basePrice = 0;
-      if (seatIndex < 200) {
-        basePrice = 50;
-      } else if (seatIndex < 400) {
-        basePrice = 40;
-      } else {
-        basePrice = 30;
-      }
-
-      
-      if (seatIndex % 40 === 0) {
-        return basePrice * 1.1;
-      }
-      return basePrice;
-    }
-
-    
-    function toggleReservation(seatIndex) {
-      var seatElement = document.getElementById("seat" + seatIndex);
-
-      if (seats[seatIndex].reserved) {
-        seats[seatIndex].reserved = false;
-        seatElement.style.backgroundColor = seats[seatIndex].color;
-      } else {
-        seats[seatIndex].reserved = true;
-        seatElement.style.backgroundColor = "gray"; 
-      }
-    }
-
-    
-    function calculateTotal() {
-      var totalCost = 0;
-      for (var i = 0; i < seats.length; i++) {
-        if (seats[i].reserved) {
-          totalCost += seats[i].price;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Cadeiras no Teatro</title>
+    <style>
+        table {
+            border-collapse: collapse;
         }
-      }
-      alert("Total cost: R$" + totalCost.toFixed(2));
-    }
 
-  
-    var seatingDiv = document.getElementById("seating");
-    for (var i = 0; i < seats.length; i++) {
-      var seatDiv = document.createElement("div");
-      seatDiv.className = "seat";
-      seatDiv.style.backgroundColor = seats[i].color;
+        td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+        }
 
-      var seatImage = document.createElement("img");
-      seatImage.src = seats[i].image;
-      seatImage.style.width = "100%";
-      seatImage.style.height = "100%";
-      seatDiv.appendChild(seatImage);
+        img {
+            height: 20px;
+            width: 20px;
+        }
 
-      seatDiv.onclick = function (index) {
-        return function () {
-          toggleReservation(index);
-        };
-      }(i);
-      seatDiv.id = "seat" + i;
-      seatingDiv.appendChild(seatDiv);
-    }
-  </script>
+        .umAcinco {
+            background-color: blue;
+        }
+
+        .seisAdez {
+            background-color: red;
+        }
+
+        .onzeAquinze {
+            background-color: yellow;
+        }
+
+        #ver {
+            margin: auto;
+            background-color: cyan;
+            border-radius: 20px;
+            width: 100px;
+            height: 25px;
+            display: block;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Reserva de Cadeiras no Teatro</h1>
+    <p><div style="background-color: blue;"></div>Fila 1 a 5: 50 reais</p>
+    <p><div style="background-color: red;"></div> Fila 6 a 10: 40 reais</p>
+    <p><div style="background-color: yellow;"></div> Fila 11 a 15: 30 reais</p>
+    <p>20 cadeiras centrais: +10%</p>
+    <table>
+        
+        
+        
+    </table>
+
+    <button id="ver" onclick="Verificar()">Verificar preço</button>
+
+    <script>
+        table = document.querySelector("table")
+
+        for (let i = 0; i < 15; i++) {
+            table.innerHTML += `<tr>${generateRow(i)}</tr>`;
+        }
+
+        function generateRow(rowNumber) {
+            let rowContent = '';
+            for (let j = 0; j < 40; j++) {
+                const seatIndex = rowNumber * 40 + j;
+                rowContent += `<td class="${parte(seatIndex)}" onclick="toggleReservation(${seatIndex})"><img id="${seatIndex}" class="imagens" src="vermelho.png"></td>`;
+            }
+            return rowContent;
+        }
+
+        function parte(n) {
+            if (n >= 0 && n < 200) {
+                return "umAcinco"
+            } else if (n >= 200 && n < 400) {
+                return "seisAdez"
+            } else {
+                return "onzeAquinze"
+            }
+        }
+
+        function toggleReservation(seatIndex) {
+            var seatElement = document.getElementById(seatIndex);
+            seatElement.style.height = seatElement.style.height === "10px" ? "20px" : "10px";
+        }
+
+        function Verificar() {
+            var preco = 0;
+
+            for (c = 0; c < 600; c++) {
+                if (document.getElementById(c).style.height == "10px") {
+                    if (c >= 0 && c < 200) {
+                        preco += 50;
+                        if (c % 40 > 9 && c % 40 < 30) {
+                            preco += Number(50 / 10);
+                        }
+                    } else if (c >= 200 && c < 400) {
+                        preco += 40;
+                        if (c % 40 > 9 && c % 40 < 30) {
+                            preco += Number(40 / 10);
+                        }
+                    } else {
+                        preco += 30;
+                        if (c % 40 > 9 && c % 40 < 30) {
+                            preco += Number(30 / 10);
+                        }
+                    }
+                }
+            }
+
+            alert(preco.toFixed(2));
+        }
+    </script>
 </body>
+
 </html>
